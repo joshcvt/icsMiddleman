@@ -1,0 +1,4 @@
+icalendar==4.0.1
+python-dateutil==2.7.2
+pytz==2018.4
+six==1.11.0
