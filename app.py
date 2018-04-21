@@ -1,4 +1,6 @@
-from chalice import Chalice
+from chalice import Chalice, Response
+from chalicelib.middleman import do_milb
+import icalendar
 
 app = Chalice(app_name='icsMiddleman')
 
@@ -7,7 +9,12 @@ app = Chalice(app_name='icsMiddleman')
 def index():
     return {'hello': 'world'}
 
-
+@app.route('/milb/{teamtoken}')
+def get_milb(teamtoken):
+	return Response(body=do_milb(teamtoken),
+		status_code=200,
+		headers={'Content-Type': 'text/calendar'})
+            
 # The view function above will return {"hello": "world"}
 # whenever you make an HTTP GET request to '/'.
 #

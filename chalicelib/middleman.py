@@ -4,6 +4,12 @@ from icalendar import Calendar, vText
 from datetime import datetime
 import urllib2, pytz
 
+CAROLINA_LEAGUE_SUBS = { 'summary': { 'Red Sox':'SalemSox', 'Nationals':'P-Nats', 'Astros':'BC Astros'} }
+EASTERN_LEAGUE_SUBS = { 'summary': { 'Flying Squirrels':'Squirrels'}}
+
+TOKEN_TO_SUBSET = { 'salemredsox':CAROLINA_LEAGUE_SUBS, 'potomacnationals':CAROLINA_LEAGUE_SUBS, 'richmondflyingsquirrels':EASTERN_LEAGUE_SUBS,'lynchburghillcats':CAROLINA_LEAGUE_SUBS}
+
+
 def get_cal(url=None,fn=None):
 
 	if url:
@@ -47,15 +53,20 @@ def clear_old_locs(cal):
 	for ev in cal.walk('vevent'):
 		if ev.decoded('dtstart') < utcnow:
 			ev['location'] = EMPTY
-	return cal	
+	return cal
 
+
+def do_milb(teamtoken):
+	cal = get_cal('https://www.stanza.co/api/schedules/milb-' + teamtoken  + '/milb-' + teamtoken + '.ics')
+	cal = clear_road_locs(cal)
+	cal = clear_old_locs(cal)
+	cal = clear_desc_boilerplate(cal)
+	if teamtoken in TOKEN_TO_SUBSET:
+		cal = field_replacements(cal,TOKEN_TO_SUBSET[teamtoken])
+	return cal.to_ical()
+	
 def test():
-	salem = get_cal('https://www.stanza.co/api/schedules/milb-salemredsox/milb-salemredsox.ics')
-	salem = clear_road_locs(salem)
-	salem = clear_desc_boilerplate(salem)
-	teamsubs = { 'summary': { 'Red Sox':'SalemSox', 'Nationals':'P-Nats'} }
-	salem = field_replacements(salem,teamsubs)
-	return salem.to_ical()
+	return do_milb('salemredsox')
 	
 """
 >>> import icalendar
