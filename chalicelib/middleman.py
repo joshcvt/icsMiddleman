@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from icalendar import Calendar, vText
-from datetime import datetime
+from datetime import datetime, date
 import urllib2, pytz
 
 CAROLINA_LEAGUE_SUBS = { 'summary': { 'Red Sox':'SalemSox', 'Nationals':'P-Nats', 'Astros':'BC Astros'} }
@@ -50,8 +50,15 @@ def field_replacements(cal,field_to_dicts):
 def clear_old_locs(cal):
 	EMPTY = vText('')
 	utcnow = pytz.utc.localize(datetime.utcnow())
+	oldtest = False
 	for ev in cal.walk('vevent'):
-		if ev.decoded('dtstart') < utcnow:
+		evtime = ev.decoded('dtstart')
+		if evtime == None:
+			continue
+		if isinstance(evtime,date):
+			# make it an evtime with midnight UTC
+			evtime = pytz.utc.localize(datetime.combine(evtime,datetime.min.time()))
+		if evtime < utcnow:
 			ev['location'] = EMPTY
 	return cal
 
