@@ -75,37 +75,3 @@ def do_milb(teamtoken):
 def test():
 	return do_milb('salemredsox')
 	
-"""
->>> import icalendar
->>> with open("squirrels.ics") as fp:
-...     sq = fp.read()
-... 
->>> cal = icalendar.Calendar.from_ics(sq)
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-AttributeError: type object 'Calendar' has no attribute 'from_ics'
->>> cal = icalendar.Calendar.from_ical(sq)
->>> len(cal.walk('vevent'))
-140
->>> opener = cal.walk('vevent')[0]
->>> from icalendar import vDatetime
->>> from datetime import datetime
->>> dtnow = datetime.now()
->>> dtnow
-datetime.datetime(2018, 4, 18, 22, 32, 56, 439493)
->>> opener.decoded('dtstart')
-datetime.datetime(2018, 4, 5, 23, 0, tzinfo=<UTC>)
->>> dtnow < opener.decoded('dtstart')
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-TypeError: can't compare offset-naive and offset-aware datetimes
->>> dtutc = datetime.utcnow()
->>> import pytz
->>> dtutc = pytz.utc.localize(dtutc)
->>> dtutc
-datetime.datetime(2018, 4, 19, 3, 15, 28, 408115, tzinfo=<UTC>)
->>> opener.decoded('dtstart') < dtutc
-True
-
-"""
-
